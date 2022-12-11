@@ -3,9 +3,11 @@ data = read.csv(file = file.choose(), header=FALSE)
 #view the content of the data
 View(data)
 
+
+
 #this function format the fields and table name to appropriate name
 checkString <- function(str) {
-  return(gsub("[,. -]", "_",  str))
+  return(gsub("[,. -]", "_",str))
 }
 
 
@@ -18,7 +20,6 @@ for(a in 1:length(data[,1])){
   table <- "";
   if(data[a,2]== "" && data[a,1] != ""){
     table =   paste(table,"Table ");
-    table =   paste(table,"Data2.");
     table =   paste(table, checkString(data[a,1]));
     table =   paste(table," {");
   } else if(data[a,1] == "Field"){
@@ -28,10 +29,29 @@ for(a in 1:length(data[,1])){
     table =   paste(table," ");
     table =   paste(table, data[a,2]);
     
+    table =   paste(table, " [ ");
+    
     if(data[a,3] == "NO"){
-      table =   paste(table," ");
-      table =   paste(table, "[pk]");
+      table =   paste(table, "not null ");
+    }else{
+      table =   paste(table, "null ");
     }
+    
+    if(data[a,4] == "Pri"){
+      table =   paste(table, ",pk ");
+      table =   paste(table, ",unique ");
+    }
+    
+    if(data[a,4] == "Mul"){
+      table =   paste(table, ",pk ");
+    }
+    
+    if(data[a,5] == "auto_incement"){
+      table =   paste(table, ",increment ");
+    }
+     
+    table =   paste(table, " ]");
+    
     
   }else if(data[a,1] == ""){
     table =   paste(table,"} ");
@@ -39,10 +59,6 @@ for(a in 1:length(data[,1])){
   cat(table)
   cat("\n")
 }
+
 #close sink after the loops
 sink()
-
-
-
-
-
